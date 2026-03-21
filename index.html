@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RESPIRATION Project – Investigation of the Influence of Resonant Phenomena of Acoustic Coagulation in Air Purification. POLONEZ BIS-2, NCN, Łukasiewicz PIAP, Warsaw.">
+    <title>RESPIRATION Project – Acoustic Coagulation Research</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* ===== BASE ===== */
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+            background-color: #fff;
+            color: #111827;
+        }
+
+        /* ===== SCROLL INDICATOR ===== */
+        @keyframes bounceDown {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(8px); }
+        }
+        .bounce { animation: bounceDown 2s ease-in-out infinite; }
+
+        /* ===== PARALLAX ===== */
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        /* ===== ACTIVE NAV LINK ===== */
+        .nav-link { transition: color 0.2s; }
+        .nav-link.active { color: #93c5fd !important; font-weight: 600; } /* light blue on dark bg */
+        #site-header.bg-white\/95 .nav-link.active { color: #2563EB !important; } /* dark blue on white bg */
+
+        /* ===== HERO GRADIENT ===== */
+        .hero-bg {
+            background: linear-gradient(135deg, #eff6ff 0%, #ffffff 55%, #f0fdf4 100%);
+        }
+
+        /* ===== SECTION STACKING ===== */
+        .stacked {
+            border-radius: 1.5rem 1.5rem 0 0;
+            margin-top: -2rem;
+            scroll-margin-top: 2rem;
+            min-height: calc(100vh + 2rem);
+        }
+
+        /* ===== APPLICATION CARDS ===== */
+        .app-card { position: relative; }
+
+        /* ===== MODALS ===== */
+        .modal-overlay {
+            display: none;
+            opacity: 0;
+            pointer-events: none;   /* safety: never block clicks when invisible */
+            transition: opacity 0.22s ease;
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: auto; }
+        .modal-box {
+            transform: scale(0.95);
+            transition: transform 0.22s ease;
+        }
+        .modal-overlay.open .modal-box { transform: scale(1); }
+
+        /* ===== HERO TEXT FLOAT-IN ===== */
+        @keyframes floatIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .float-in {
+            opacity: 0;
+            animation: floatIn 0.8s ease forwards;
+        }
+        .float-in.fi0 { animation-delay: 0s; }
+        .float-in.fi1 { animation-delay: 0.18s; }
+        .float-in.fi2 { animation-delay: 0.38s; }
+        .float-in.fi3 { animation-delay: 0.58s; }
+        .float-in.fi4 { animation-delay: 0.78s; }
+        .float-in.fi5 { animation-delay: 0.96s; }
+
+        /* ===== SCROLL REVEAL – APP CARDS ===== */
+        .app-reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .app-card.revealed .app-reveal { opacity: 1; transform: translateY(0); }
+        .app-reveal.d1 { transition-delay: 0.08s; }
+        .app-reveal.d2 { transition-delay: 0.22s; }
+        .app-reveal.d3 { transition-delay: 0.36s; }
+        .app-reveal.d4 { transition-delay: 0.50s; }
+
+        /* ===== STACKED PUB CARDS ===== */
+        .pub-stack {
+            position: relative;
+            cursor: pointer;
+            transition: min-height 0.75s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+        .pub-item {
+            position: absolute;
+            left: 0; right: 0;
+            height: 112px;
+            transition: top 0.75s cubic-bezier(0.075, 0.82, 0.165, 1),
+                        box-shadow 0.25s ease;
+        }
+        .pub-item:hover { box-shadow: 0 12px 32px -6px rgba(0,0,0,0.14); }
+        .pub-show-less {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        /* ===== SHIMMER BUTTON ===== */
+        @keyframes sbtn-shimmer {
+            0%   { transform: translateX(-120%) rotate(20deg); }
+            100% { transform: translateX(120%)  rotate(20deg); }
+        }
+        .sbtn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 9999px;
+            padding: 11px 24px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0f1a35 60%, #1a2744 100%);
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: filter 0.2s, transform 0.15s;
+        }
+        .sbtn:hover  { filter: brightness(1.12); }
+        .sbtn:active { transform: scale(0.97); filter: brightness(0.95); }
+        .sbtn::before {
+            content: '';
+            position: absolute;
+            inset: -100%;
+            background: linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.28) 50%, transparent 70%);
+            animation: sbtn-shimmer 3s infinite;
+        }
+
+        /* Ghost variant – for "View Publications" on dark hero */
+        .sbtn-ghost {
+            background: transparent;
+            border: 1.5px solid rgba(255,255,255,0.45);
+            color: rgba(255,255,255,0.9);
+        }
+        .sbtn-ghost:hover { filter: none; background: rgba(255,255,255,0.08); }
+        .sbtn-ghost::before {
+            background: linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+        }
+
+        /* Full-width (app cards) */
+        .sbtn-full { width: 100%; }
+
+        /* ===== CONTACT CARD ===== */
+        .contact-card { background: rgba(255,255,255,0.65); }
+        .contact-card h3 {
+            transition: color 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .contact-card:hover h3 { color: #fff; }
+    </style>
+</head>
+
+<body>
+
+<!-- ============================================================ -->
+<!-- HEADER                                                       -->
+<!-- ============================================================ -->
+<header id="site-header" class="fixed top-0 left-0 right-0 z-[100] bg-transparent backdrop-blur-sm transition-all duration-300">
+    <nav class="max-w-7xl mx-auto px-6 py-3.5">
+        <div class="flex items-center justify-between">
+
+            <!-- Logos + Title -->
+            <div class="flex items-center gap-3">
+                <img src="assets/images/logos/eu-flag.png"       alt="EU Flag"    class="h-7 w-auto">
+                <img src="assets/images/logos/polonez-short.png" alt="POLONEZ BIS" class="h-7 w-auto hidden sm:block">
+                <img src="assets/images/logos/ncn-logo.png"      alt="NCN"        class="h-7 w-auto hidden sm:block">
+                <div id="nav-divider" class="w-px h-6 bg-white/30 hidden sm:block"></div>
+                <span id="nav-title" class="text-lg font-bold tracking-wide text-white">RESPIRATION</span>
+            </div>
+
+            <!-- Hamburger (mobile) -->
+            <button id="mobile-menu-btn"
+                    aria-label="Toggle navigation"
+                    aria-expanded="false"
+                    class="md:hidden p-2 rounded-lg transition text-white hover:bg-white/10">
+                <svg id="icon-menu"  class="w-6 h-6"        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+                <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <!-- Desktop Nav -->
+            <ul id="nav-links" class="hidden md:flex items-center gap-7 text-sm font-medium text-white/80">
+                <li><a href="#home"         class="nav-link hover:text-white transition">Home</a></li>
+                <li><a href="#technology"   class="nav-link hover:text-white transition">Technology</a></li>
+                <li><a href="#applications" class="nav-link hover:text-white transition">Applications</a></li>
+                <li><a href="#project"      class="nav-link hover:text-white transition">Project</a></li>
+                <li><a href="#publications" class="nav-link hover:text-white transition">Publications</a></li>
+                <li><a href="#contact"      class="nav-link hover:text-white transition">Contact</a></li>
+            </ul>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden mt-3 pt-3 border-t border-white/20">
+            <ul class="flex flex-col gap-1 text-sm font-medium text-white/80">
+                <li><a href="#home"         class="nav-link block px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition">Home</a></li>
+                <li><a href="#technology"   class="nav-link block px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition">Technology</a></li>
+                <li><a href="#applications" class="nav-link block px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition">Applications</a></li>
+                <li><a href="#project"      class="nav-link block px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition">Project</a></li>
+                <li><a href="#publications" class="nav-link block px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition">Publications</a></li>
+                <li><a href="#contact"      class="nav-link block px-3 py-2 rounded-lg hover:bg-white/10 hover:text-white transition">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main>
+
+<!-- ============================================================ -->
+<!-- HOME – clean gradient hero, no background image              -->
+<!-- ============================================================ -->
+<section id="home" class="relative flex items-center justify-center overflow-hidden bg-neutral-950" style="min-height: calc(100vh + 2rem);">
+
+    <!-- Animated beams canvas -->
+    <canvas id="beams-canvas" class="absolute inset-0 pointer-events-none" style="filter: blur(18px); will-change: transform;"></canvas>
+
+    <!-- Subtle overlay pulse (matches 3.txt motion div) -->
+    <div class="absolute inset-0 bg-neutral-950/5 pointer-events-none"></div>
+
+    <!-- Content -->
+    <div class="relative z-10 max-w-3xl mx-auto px-6 text-center pt-24 pb-20">
+
+        <!-- POLONEZ BIS logo -->
+        <div class="float-in fi0 flex justify-center mb-10">
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 px-8 py-4 inline-block">
+                <img src="assets/images/logos/polonez-bis.png" alt="POLONEZ BIS" class="h-14 w-auto" loading="lazy">
+            </div>
+        </div>
+
+        <!-- Main title -->
+        <h1 class="float-in fi1 font-extrabold text-white leading-none mb-5 tracking-tight"
+            style="font-size: clamp(3rem, 8vw, 6rem);">
+            RESPIRATION
+        </h1>
+
+        <!-- Full project title (original, unchanged) -->
+        <p class="float-in fi2 text-white/70 font-medium leading-relaxed mb-5"
+           style="font-size: clamp(0.9rem, 1.6vw, 1.125rem);">
+            Investigation of the Influence of Resonant Phenomena of Acoustic Coagulation in Air Purification
+        </p>
+
+        <!-- Description (original, unchanged) -->
+        <p class="float-in fi3 text-white/50 text-sm leading-relaxed mb-10">
+            Solving the problem of PM2.5 air purification by increasing the efficiency of acoustic pre-treatment technology using mechanical resonators.
+        </p>
+
+        <!-- Meta line -->
+        <p class="float-in fi4 text-white/30 text-xs tracking-widest uppercase mb-10">
+            POLONEZ BIS-2 &nbsp;·&nbsp; Project 557299 &nbsp;·&nbsp; Łukasiewicz – PIAP, Warsaw
+        </p>
+
+        <!-- CTAs -->
+        <div class="float-in fi5 flex flex-wrap gap-3 justify-center">
+            <a href="#technology" class="sbtn" style="padding: 0 28px; min-height: 46px;">Explore Technology</a>
+            <a href="#publications" class="sbtn sbtn-ghost" style="padding: 0 28px; min-height: 46px;">View Publications</a>
+        </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute left-0 right-0 bounce text-white/30 text-xs tracking-widest uppercase select-none text-center" style="bottom: calc(2rem + 32px);">
+        Scroll to explore
+    </div>
+
+</section>
+
+
+<!-- ============================================================ -->
+<!-- TECHNOLOGY – video background (unchanged)                    -->
+<!-- ============================================================ -->
+<section id="technology" class="relative min-h-screen overflow-hidden stacked z-10 pb-12" style="padding-top: 80px;">
+
+    <!-- Video Background -->
+    <div class="absolute inset-0 w-full h-full">
+        <video autoplay loop muted playsinline preload="metadata" class="w-full h-full object-cover">
+            <source src="assets/videos/technology/acoustic-process.mp4" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 bg-black/62"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-12 flex flex-col" style="min-height: calc(100vh - 80px);">
+
+        <h2 class="text-5xl md:text-6xl font-bold text-white mb-auto pt-2">TECHNOLOGY</h2>
+
+        <div class="pb-10 mt-12">
+            <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
+
+                <!-- Diagrams column -->
+                <div class="flex flex-col justify-end">
+                    <div class="grid grid-cols-2 gap-5">
+                        <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/20">
+                            <img src="assets/images/technology/standing-wave.png"
+                                 alt="Standing Wave Pattern"
+                                 class="w-full h-auto object-contain rounded-lg" loading="lazy">
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/20">
+                            <img src="assets/images/technology/vibration-modes.png"
+                                 alt="Resonator Vibration Modes"
+                                 class="w-full h-auto object-contain rounded-lg" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-5 mt-2">
+                        <p class="text-white/70 text-xs text-center">Standing wave pattern</p>
+                        <p class="text-white/70 text-xs text-center">Resonator vibration modes</p>
+                    </div>
+                </div>
+
+                <!-- How it works -->
+                <div class="flex flex-col justify-end">
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-7 border border-white/20">
+                        <h3 class="text-2xl font-bold text-white mb-4">How it works</h3>
+                        <p class="text-white/90 leading-relaxed text-sm md:text-base">
+                            The technology combines acoustic and mechanical resonance to enlarge submicron aerosol particles. Ultrasonic emitters excite thin elastic resonator plates. A standing wave forms in the gaps between the plates, while the plates oscillate at their natural frequency, amplifying the acoustic field. Three coagulation mechanisms work simultaneously: PM2.5 particles gather at standing wave nodes, collide due to velocity gradients, and are captured by vibrations near the plate surfaces, forming agglomerates.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- APPLICATIONS – FeatureHighlightCard style                    -->
+<!-- ============================================================ -->
+<section id="applications" class="relative bg-stone-50 stacked z-20 pb-20" style="padding-top: 80px;">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+
+        <h2 class="text-5xl md:text-6xl font-bold text-gray-900 mb-3 text-center">APPLICATIONS</h2>
+        <p class="text-gray-400 text-center mb-16 text-base">Click any card to learn more</p>
+
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+
+            <!-- Card 1: AIRSONIC -->
+            <div class="app-card bg-white/80 rounded-2xl border border-stone-200 p-8 text-center shadow-sm cursor-pointer hover:-translate-y-2 hover:shadow-xl transition-all duration-300 flex flex-col"
+                 onclick="openModal('modal-airsonic')">
+                <div class="app-reveal d1 mb-6 overflow-hidden rounded-xl bg-gray-100">
+                    <img src="assets/images/applications/airsonic-module.jpg"
+                         alt="AIRSONIC Module"
+                         class="w-full h-48 object-cover" loading="lazy">
+                </div>
+                <h3 class="app-reveal d2 text-xl font-bold text-gray-900 tracking-tight mb-3">AIRSONIC Module</h3>
+                <p class="app-reveal d3 text-gray-500 text-sm leading-relaxed mb-6 flex-1">
+                    Acoustic coagulation for cleanroom air purification
+                </p>
+                <div class="app-reveal d4 sbtn sbtn-full">Learn More</div>
+            </div>
+
+            <!-- Card 2: Sonic Lock -->
+            <div class="app-card bg-white/80 rounded-2xl border border-stone-200 p-8 text-center shadow-sm cursor-pointer hover:-translate-y-2 hover:shadow-xl transition-all duration-300 flex flex-col"
+                 onclick="openModal('modal-sonic-lock')">
+                <div class="app-reveal d1 mb-6 overflow-hidden rounded-xl bg-gray-100">
+                    <img src="assets/images/applications/sonic-lock-streamlines.png"
+                         alt="Sonic Lock Technology"
+                         class="w-full h-48 object-cover" loading="lazy">
+                </div>
+                <h3 class="app-reveal d2 text-xl font-bold text-gray-900 tracking-tight mb-3">Sonic Lock Technology</h3>
+                <p class="app-reveal d3 text-gray-500 text-sm leading-relaxed mb-6 flex-1">
+                    Oscillating rods for particle blockage
+                </p>
+                <div class="app-reveal d4 sbtn sbtn-full">Learn More</div>
+            </div>
+
+            <!-- Card 3: Mobile Module -->
+            <div class="app-card bg-white/80 rounded-2xl border border-stone-200 p-8 text-center shadow-sm cursor-pointer hover:-translate-y-2 hover:shadow-xl transition-all duration-300 flex flex-col"
+                 onclick="openModal('modal-mobile')">
+                <div class="app-reveal d1 mb-6 overflow-hidden rounded-xl bg-gray-100">
+                    <img src="assets/images/applications/mobile-module-robot.jpg"
+                         alt="Mobile Acoustic Module"
+                         class="w-full h-48 object-cover" loading="lazy">
+                </div>
+                <h3 class="app-reveal d2 text-xl font-bold text-gray-900 tracking-tight mb-3">Mobile Module</h3>
+                <p class="app-reveal d3 text-gray-500 text-sm leading-relaxed mb-6 flex-1">
+                    Portable unit for emergency deployment
+                </p>
+                <div class="app-reveal d4 sbtn sbtn-full">Learn More</div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- APPLICATION MODALS                                           -->
+<!-- ============================================================ -->
+
+<!-- Modal: AIRSONIC -->
+<div id="modal-airsonic"
+     role="dialog" aria-modal="true" aria-label="AIRSONIC Module details"
+     class="modal-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] items-center justify-center p-4 md:p-6"
+     onclick="closeModal('modal-airsonic')">
+    <div class="modal-box bg-white rounded-3xl max-w-4xl w-full shadow-2xl overflow-hidden max-h-[90vh]"
+         onclick="event.stopPropagation()">
+        <div class="flex flex-col md:flex-row max-h-[90vh]">
+            <div class="md:w-2/5 h-52 md:h-auto flex-shrink-0">
+                <img src="assets/images/applications/airsonic-module.jpg" alt="AIRSONIC Module"
+                     class="w-full h-full object-cover" loading="lazy">
+            </div>
+            <div class="md:w-3/5 p-7 overflow-y-auto">
+                <div class="flex justify-between items-start mb-5">
+                    <h2 class="text-2xl font-bold text-gray-900">AIRSONIC Module</h2>
+                    <button onclick="closeModal('modal-airsonic')" aria-label="Close modal"
+                            class="ml-4 p-2 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <p class="text-gray-600 mb-4 leading-relaxed text-sm">
+                    Acoustic coagulation system for cleanroom air purification.
+                </p>
+                <ul class="text-gray-600 space-y-2 leading-relaxed mb-5 text-sm">
+                    <li class="flex items-start gap-2"><span class="text-blue-500 mt-0.5 flex-shrink-0">•</span>Ultrasonic resonators (20 kHz) enlarge PM2.5 particles through a standing wave field</li>
+                    <li class="flex items-start gap-2"><span class="text-blue-500 mt-0.5 flex-shrink-0">•</span>HEPA filter lifespan +50–100%, energy consumption −20–25%</li>
+                    <li class="flex items-start gap-2"><span class="text-blue-500 mt-0.5 flex-shrink-0">•</span>Modular design for flexible integration</li>
+                </ul>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    <strong class="text-gray-900">Applications:</strong> Pharmaceutical cleanrooms (GMP A/B), semiconductors (ISO 5–7), medical facilities
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Sonic Lock -->
+<div id="modal-sonic-lock"
+     role="dialog" aria-modal="true" aria-label="Sonic Lock Technology details"
+     class="modal-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] items-center justify-center p-4 md:p-6"
+     onclick="closeModal('modal-sonic-lock')">
+    <div class="modal-box bg-white rounded-3xl max-w-4xl w-full shadow-2xl overflow-hidden max-h-[90vh]"
+         onclick="event.stopPropagation()">
+        <div class="flex flex-col md:flex-row max-h-[90vh]">
+            <div class="md:w-2/5 h-52 md:h-auto flex-shrink-0">
+                <img src="assets/images/applications/sonic-lock-streamlines.png" alt="Sonic Lock Technology"
+                     class="w-full h-full object-cover" loading="lazy">
+            </div>
+            <div class="md:w-3/5 p-7 overflow-y-auto">
+                <div class="flex justify-between items-start mb-5">
+                    <h2 class="text-2xl font-bold text-gray-900">Sonic Lock Technology</h2>
+                    <button onclick="closeModal('modal-sonic-lock')" aria-label="Close modal"
+                            class="ml-4 p-2 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <p class="text-gray-600 mb-4 leading-relaxed text-sm">
+                    Independent particle blockage system through oscillating rods.
+                </p>
+                <ul class="text-gray-600 space-y-2 leading-relaxed mb-5 text-sm">
+                    <li class="flex items-start gap-2"><span class="text-blue-500 mt-0.5 flex-shrink-0">•</span>Pre-tensioned steel rods capture PM2.5 by inertial interception</li>
+                    <li class="flex items-start gap-2"><span class="text-blue-500 mt-0.5 flex-shrink-0">•</span>6× increase in particle capture compared to stationary case</li>
+                    <li class="flex items-start gap-2"><span class="text-blue-500 mt-0.5 flex-shrink-0">•</span>Composition-independent, full blockage of target particle sizes</li>
+                </ul>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    <strong class="text-gray-900">Application:</strong> Pre-treatment barrier upstream of HEPA filters
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Mobile Module -->
+<div id="modal-mobile"
+     role="dialog" aria-modal="true" aria-label="Mobile Module details"
+     class="modal-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] items-center justify-center p-4 md:p-6"
+     onclick="closeModal('modal-mobile')">
+    <div class="modal-box bg-white rounded-3xl max-w-4xl w-full shadow-2xl overflow-hidden max-h-[90vh]"
+         onclick="event.stopPropagation()">
+        <div class="flex flex-col md:flex-row max-h-[90vh]">
+            <div class="md:w-2/5 h-52 md:h-auto flex-shrink-0">
+                <img src="assets/images/applications/mobile-module-robot.jpg" alt="Mobile Acoustic Module"
+                     class="w-full h-full object-cover" loading="lazy">
+            </div>
+            <div class="md:w-3/5 p-7 overflow-y-auto">
+                <div class="flex justify-between items-start mb-5">
+                    <h2 class="text-2xl font-bold text-gray-900">Mobile Acoustic Module</h2>
+                    <button onclick="closeModal('modal-mobile')" aria-label="Close modal"
+                            class="ml-4 p-2 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <p class="text-gray-600 mb-4 leading-relaxed text-sm">
+                    Portable air purification unit for rapid emergency deployment.
+                </p>
+                <ul class="text-gray-600 space-y-2 leading-relaxed mb-5 text-sm">
+                    <li class="flex items-start gap-2"><span class="text-blue-500 mt-0.5 flex-shrink-0">•</span>Dimensions: 382×194×150 mm</li>
+                    <li class="flex items-start gap-2"><span class="text-blue-500 mt-0.5 flex-shrink-0">•</span>Weight: 8.2 kg</li>
+                    <li class="flex items-start gap-2"><span class="text-blue-500 mt-0.5 flex-shrink-0">•</span>Compatible platforms: Boston Dynamics Spot, Husarion Panther, PIAP GRYF</li>
+                </ul>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    <strong class="text-gray-900">Application:</strong> Emergency air purification in disaster zones, mobile cleanroom solutions
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- PROJECT – lab-background.jpg (moved from hero)              -->
+<!-- ============================================================ -->
+<section id="project"
+         class="relative min-h-screen overflow-hidden stacked z-30 pb-20 parallax-bg"
+         style="padding-top: 80px; background-image: url('assets/images/home/lab-background.jpg');">
+
+    <div class="absolute inset-0 bg-black/62"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
+
+        <h2 class="text-5xl md:text-6xl font-bold text-white mb-12">ABOUT THE PROJECT</h2>
+
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl">
+
+            <!-- Description -->
+            <div class="md:col-span-2 bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                <h3 class="text-2xl font-bold text-white mb-5">What is RESPIRATION?</h3>
+                <div class="text-white/90 space-y-4 leading-relaxed text-sm md:text-base">
+                    <p>
+                        The World Health Organization has identified air pollution as one of the most serious environmental hazards to human health. Fine particles with a diameter of less than 2.5 microns (PM2.5) can penetrate deep into the lungs and even into the circulatory system, adversely affecting cardiovascular and respiratory systems.
+                    </p>
+                    <p>
+                        <strong class="text-white">The RESPIRATION project aims to solve this problem</strong> by increasing the efficiency of air purification technology using acoustic coagulation with resonators.
+                    </p>
+                    <p>
+                        The pioneering nature of the project lies in using resonators located in the path of gas flow, combined with computer modeling by the finite element method to meaningfully consider all factors influencing acoustic coagulation.
+                    </p>
+                </div>
+                <button onclick="openModal('modal-project-info')" class="sbtn mt-7">Learn more for general public</button>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                <h3 class="text-base font-bold text-white mb-5 text-center">Quick Facts</h3>
+                <div class="space-y-4 text-white text-sm">
+                    <div>
+                        <p class="text-xs text-white/55 uppercase tracking-wide mb-1">Project ID</p>
+                        <p class="font-semibold">557299</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-white/55 uppercase tracking-wide mb-1">Acronym</p>
+                        <p class="font-semibold">RESPIRATION</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-white/55 uppercase tracking-wide mb-1">Type</p>
+                        <p class="font-semibold">POLONEZ BIS-2</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-white/55 uppercase tracking-wide mb-1">Timeline</p>
+                        <p class="font-semibold">26.04.2024 – 25.04.2026</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-white/55 uppercase tracking-wide mb-1">Budget</p>
+                        <p class="font-semibold">1,005,967 PLN</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-white/55 uppercase tracking-wide mb-1">Project Manager</p>
+                        <p class="font-semibold">Dr. Vladyslav Shybetskyi</p>
+                    </div>
+                    <div class="pt-4 border-t border-white/20">
+                        <a href="https://piap.lukasiewicz.gov.pl/en/research-projects/respiration-project/"
+                           target="_blank"
+                           class="sbtn sbtn-full">View on PIAP</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Modal: Project Info for General Public -->
+<div id="modal-project-info"
+     role="dialog" aria-modal="true" aria-label="Project information for the general public"
+     class="modal-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] items-center justify-center p-4 md:p-6"
+     onclick="closeModal('modal-project-info')">
+    <div class="modal-box bg-white rounded-3xl max-w-4xl w-full shadow-2xl max-h-[90vh] overflow-hidden"
+         onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center px-8 pt-7 pb-5 border-b border-gray-100">
+            <h2 class="text-2xl font-bold text-gray-900">For the General Public</h2>
+            <button onclick="closeModal('modal-project-info')" aria-label="Close modal"
+                    class="p-2 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="px-8 py-6 overflow-y-auto" style="max-height: calc(90vh - 84px);">
+            <div class="text-gray-700 space-y-4 leading-relaxed text-sm">
+                <p>The World Health Organization has identified the problem of air pollution as one of the most serious environmental hazards to human health at the level of climate change. Classic "pollutants" include fine particles, ozone, nitrogen dioxide, sulfur dioxide and carbon monoxide. Of particular concern are fine particles with a diameter of less than 10 and 2.5 microns (PM10 and PM2.5). PM2.5 can penetrate even into the circulatory system, adversely affecting the cardiovascular and respiratory systems and internal organs.</p>
+                <p>This problem is most common in middle- and low-income countries. For the first time since 2005, the WHO has revised PM10 and PM2.5 emission standards. Mortality from coronary heart disease accounts for 16% of deaths; chronic obstructive pulmonary disease 11% and stroke 6%.</p>
+                <p>Beyond direct health impacts, air pollution raises the cost of medicines and precision manufacturing (military, aerospace, pharmaceutical) performed in controlled premises.</p>
+
+                <h3 class="text-base font-bold text-gray-900 mt-5 mb-2">Project Aims</h3>
+                <p>The project aims to solve the problem of purification of air from fine particles (diameter &lt; 2.5 μm) by increasing the efficiency of pre-treatment technology with an acoustic field using resonators.</p>
+
+                <h3 class="text-base font-bold text-gray-900 mt-5 mb-2">Pioneering Nature</h3>
+                <ul class="list-disc list-inside space-y-2 ml-2 text-gray-600">
+                    <li>Use of resonators located in the path of the gas to be purified.</li>
+                    <li>Finite element method computer modeling to consider all factors influencing acoustic coagulation.</li>
+                </ul>
+                <p class="mt-3">Adding resonators: creates an additional barrier to airflow, complicates particle trajectory oscillations, and allows obtaining high acoustic pressure values at lower energy consumption through the resonance phenomenon.</p>
+
+                <h3 class="text-base font-bold text-gray-900 mt-5 mb-2">Project Results</h3>
+                <div class="space-y-2 text-gray-600">
+                    <p><strong class="text-gray-800">1.</strong> Computer and mathematical models for the design phase of air purification systems, scalable from laboratory to industrial installations.</p>
+                    <p><strong class="text-gray-800">2.</strong> Results to be implemented in a PhD dissertation.</p>
+                    <p><strong class="text-gray-800">3.</strong> Models introduced into the educational process at the National Technical University of Ukraine "Igor Sikorsky Kyiv Polytechnic Institute".</p>
+                    <p><strong class="text-gray-800">4.</strong> 2 articles in peer-reviewed journals (top 10 Scopus) and 2 Open Access publications planned.</p>
+                    <p><strong class="text-gray-800">5.</strong> Coverage at 3 international conferences.</p>
+                    <p><strong class="text-gray-800">6.</strong> Materials used to prepare a Horizon Europe application.</p>
+                    <p><strong class="text-gray-800">7.</strong> Increased research capacity of Łukasiewicz Research Network.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- PUBLICATIONS – stacked expandable card lists                 -->
+<!-- ============================================================ -->
+<section id="publications" class="relative stacked z-40 pb-20" style="padding-top: 80px; background: #091020;">
+
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+
+        <h2 class="text-5xl md:text-6xl font-bold text-white mb-16 text-center">PUBLICATIONS</h2>
+
+        <div class="grid md:grid-cols-2 gap-16 max-w-5xl mx-auto">
+
+            <!-- ===== Journal Articles ===== -->
+            <div>
+                <div class="border-b-2 border-white/25 pb-2 mb-2">
+                    <h3 class="text-xl font-bold text-white">Journal Articles</h3>
+                </div>
+                <p class="text-xs text-white/40 mb-8">Click the stack to expand</p>
+
+                <!-- Stack container -->
+                <div class="pub-stack" id="stack-journal">
+
+                    <!-- Article 1 -->
+                    <div class="pub-item rounded-2xl p-4 flex items-center gap-4"
+                         style="top: 24px; z-index: 1; background: #0f1a35; border: 1px solid rgba(255,255,255,0.12);">
+                        <a href="https://doi.org/10.3390/asi8040116" target="_blank" rel="noopener noreferrer"
+                           class="flex items-center gap-4 w-full pub-link" style="pointer-events: none;">
+                            <!-- Thumbnail -->
+                            <div class="w-16 h-16 shrink-0 rounded-xl overflow-hidden ring-2 ring-white/10 bg-white flex items-center justify-center">
+                                <span class="font-bold text-sm leading-tight text-center px-1" style="color:#0f1a35;">ASI</span>
+                            </div>
+                            <!-- Text -->
+                            <div class="min-w-0 flex-1">
+                                <p class="text-white font-semibold text-sm leading-tight line-clamp-2 mb-1">
+                                    Classification and Comparative Analysis of Acoustic Agglomeration Systems for Fine Particle Removal
+                                </p>
+                                <p class="text-white/50 text-xs">
+                                    Shybetsky et al. &nbsp;·&nbsp; Applied System Innovation 2025
+                                </p>
+                                <span class="inline-block mt-1 px-2 py-0.5 bg-blue-500/20 text-blue-300 text-xs font-medium rounded-full">Open Access</span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Show less -->
+                    <div class="pub-show-less">
+                        <button class="px-4 py-1.5 text-white/60 hover:text-white text-xs rounded-lg font-medium transition whitespace-nowrap" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);">
+                            Show less
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Conference Papers ===== -->
+            <div>
+                <div class="border-b-2 border-white/25 pb-2 mb-2">
+                    <h3 class="text-xl font-bold text-white">Conference Papers</h3>
+                </div>
+                <p class="text-xs text-white/40 mb-8">Click the stack to expand</p>
+
+                <!-- Stack container -->
+                <div class="pub-stack" id="stack-conference">
+
+                    <!-- Paper 1 – Springer -->
+                    <div class="pub-item rounded-2xl p-4 flex items-center gap-4"
+                         style="top: 24px; z-index: 3; background: #0f1a35; border: 1px solid rgba(255,255,255,0.12);">
+                        <a href="https://doi.org/10.1007/978-3-032-08359-3_9" target="_blank" rel="noopener noreferrer"
+                           class="flex items-center gap-4 w-full pub-link" style="pointer-events: none;">
+                            <div class="w-16 h-16 shrink-0 rounded-xl bg-white flex items-center justify-center">
+                                <span class="font-bold text-sm" style="color:#0f1a35;">SPR</span>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-white font-semibold text-sm leading-tight line-clamp-2 mb-1">
+                                    Modeling of Ultrasonic Emitter Surface Oscillations for Ultrasound Enhanced Processes
+                                </p>
+                                <p class="text-white/50 text-xs">
+                                    Shybetskyi et al. &nbsp;·&nbsp; Springer Automation 2025
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Paper 2 – Zenodo / AIIT -->
+                    <div class="pub-item rounded-2xl p-4 flex items-center gap-4"
+                         style="top: 36px; z-index: 2; background: #0f1a35; border: 1px solid rgba(255,255,255,0.12);">
+                        <a href="https://doi.org/10.5281/zenodo.16794305" target="_blank" rel="noopener noreferrer"
+                           class="flex items-center gap-4 w-full pub-link" style="pointer-events: none;">
+                            <div class="w-16 h-16 shrink-0 rounded-xl bg-white flex items-center justify-center">
+                                <span class="font-bold text-sm" style="color:#0f1a35;">ZEN</span>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-white font-semibold text-sm leading-tight line-clamp-2 mb-1">
+                                    Mathematical modeling of acoustic impact on airborne particles through resonators
+                                </p>
+                                <p class="text-white/50 text-xs">
+                                    Shybetskyi, Korobiichuk &nbsp;·&nbsp; AIIT-2024, Kyiv
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Paper 3 – Zenodo / Biotechnology -->
+                    <div class="pub-item rounded-2xl p-4 flex items-center gap-4"
+                         style="top: 48px; z-index: 1; background: #0f1a35; border: 1px solid rgba(255,255,255,0.12);">
+                        <a href="https://doi.org/10.5281/zenodo.16794519" target="_blank" rel="noopener noreferrer"
+                           class="flex items-center gap-4 w-full pub-link" style="pointer-events: none;">
+                            <div class="w-16 h-16 shrink-0 rounded-xl bg-white flex items-center justify-center">
+                                <span class="font-bold text-sm" style="color:#0f1a35;">BIO</span>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-white font-semibold text-sm leading-tight line-clamp-2 mb-1">
+                                    Ultrasonic pre-treatment for enhanced air filtration in pharmaceutical cleanrooms
+                                </p>
+                                <p class="text-white/50 text-xs">
+                                    Shybetskyi et al. &nbsp;·&nbsp; Biotechnology XXI Century 2025
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Show less -->
+                    <div class="pub-show-less">
+                        <button class="px-4 py-1.5 text-white/60 hover:text-white text-xs rounded-lg font-medium transition whitespace-nowrap" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);">
+                            Show less
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- CONTACT                                                      -->
+<!-- ============================================================ -->
+<section id="contact" class="relative stacked z-50 pb-28" style="padding-top: 80px; background: #d1d5db;">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+
+        <h2 class="text-5xl md:text-6xl font-bold mb-3 text-center text-gray-900">CONTACT</h2>
+        <p class="text-gray-500 text-center mb-16 text-base">Get in touch with the research team</p>
+
+        <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+
+            <!-- ── Card 1: Principal Investigator ── -->
+            <div class="contact-card relative overflow-hidden rounded-3xl border border-gray-300 cursor-default"
+                 style="isolation: isolate;">
+
+                <!-- Hover overlay (clip-path reveal, blue gradient) -->
+                <div class="contact-overlay absolute inset-0 pointer-events-none"
+                     style="background: linear-gradient(135deg, #0d1729 0%, #080f1e 55%, #040912 100%);
+                            clip-path: circle(50px at 64px 64px);
+                            transition: clip-path 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+                            z-index: 0;">
+                </div>
+
+                <!-- Content -->
+                <div class="relative z-10 p-8 flex flex-col h-full">
+                    <div class="mb-6">
+                        <img src="assets/images/contacts/hero.png"
+                             alt="Dr. Vladyslav Shybetskyi"
+                             class="w-16 h-16 rounded-full object-cover"
+                             style="outline: 2px solid rgba(59,130,246,0.5); outline-offset: 3px;"
+                             loading="lazy">
+                    </div>
+                    <p class="text-gray-500 text-sm mb-1">Principal Investigator · Warsaw, Poland</p>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-5">Vladyslav Shybetskyi</h3>
+                    <p class="text-gray-500 text-sm mb-5">PhD in Mechanical Engineering</p>
+                    <div class="flex-1"></div>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2.5">
+                            <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            <a href="mailto:vladyslav.shybetskyi@piap.lukasiewicz.gov.pl"
+                               class="text-blue-600 hover:text-blue-800 transition text-xs flex-1 leading-tight break-all">
+                                vladyslav.shybetskyi@piap.lukasiewicz.gov.pl
+                            </a>
+                            <button id="copy-btn-pi"
+                                    onclick="copyEmail('vladyslav.shybetskyi@piap.lukasiewicz.gov.pl','copy-btn-pi')"
+                                    title="Copy email"
+                                    class="shrink-0 p-1.5 rounded-lg bg-gray-200 hover:bg-gray-300 transition text-gray-500 hover:text-gray-800">
+                                <svg id="copy-icon-pi" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                </svg>
+                                <svg id="check-icon-pi" class="w-3.5 h-3.5 hidden text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <svg class="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                            <a href="https://www.linkedin.com/in/vladyslav-shybetskyi-0005991a6"
+                               target="_blank" rel="noopener noreferrer"
+                               class="text-blue-600 hover:text-blue-800 transition text-xs">
+                                LinkedIn Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Card 2: Host Institution ── -->
+            <div class="contact-card relative overflow-hidden rounded-3xl border border-gray-300 cursor-default"
+                 style="isolation: isolate;">
+
+                <!-- Hover overlay -->
+                <div class="contact-overlay absolute inset-0 pointer-events-none"
+                     style="background: linear-gradient(135deg, #0d1729 0%, #080f1e 55%, #040912 100%);
+                            clip-path: circle(50px at 64px 64px);
+                            transition: clip-path 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+                            z-index: 0;">
+                </div>
+
+                <!-- Content -->
+                <div class="relative z-10 p-8 flex flex-col h-full">
+                    <div class="mb-6">
+                        <img src="assets/images/contacts/host.png"
+                             alt="Łukasiewicz – PIAP"
+                             class="w-16 h-16 rounded-full object-cover"
+                             loading="lazy">
+                    </div>
+                    <p class="text-gray-500 text-sm mb-1">Host Institution · Warsaw, Poland</p>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-5">Łukasiewicz – PIAP</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed flex-1 mb-7">
+                        Industrial Research Institute for Automation and Measurements. Poland's leading research centre in robotics, automation, and measurement technologies.<br>
+                        <span class="text-gray-400">Al. Jerozolimskie 202, 02-486 Warsaw</span>
+                    </p>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2.5">
+                            <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                            </svg>
+                            <a href="https://piap.lukasiewicz.gov.pl/"
+                               target="_blank" rel="noopener noreferrer"
+                               class="text-blue-600 hover:text-blue-800 transition text-xs">
+                                piap.lukasiewicz.gov.pl
+                            </a>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Al.+Jerozolimskie+202,+02-486+Warsaw,+Poland"
+                               target="_blank" rel="noopener noreferrer"
+                               class="text-blue-600 hover:text-blue-800 transition text-xs">
+                                Open in Google Maps
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+</main>
+
+
+<!-- ============================================================ -->
+<!-- FOOTER                                                       -->
+<!-- ============================================================ -->
+<footer class="text-white relative z-[60] px-6 pb-6 pt-0" style="background: #d1d5db;">
+    <div class="bg-neutral-950 rounded-3xl px-8 py-10">
+
+        <div class="max-w-4xl mx-auto mb-8 text-center">
+            <p class="text-white/35 text-sm leading-relaxed">
+                Research carried out under project number 2022/45/P/ST8/03621 co-financed by the National Science Centre
+                and the European Union Framework Programme for Research and Innovation "Horizon 2020",
+                under contract 945339, within the "Marie Skłodowska-Curie" measures.
+            </p>
+        </div>
+
+        <div class="flex justify-center items-center gap-8 mb-8">
+            <img src="assets/images/logos/eu-flag.png"    alt="EU Flag"    class="h-12 w-auto" loading="lazy">
+            <img src="assets/images/logos/polonez-bis.png" alt="POLONEZ BIS" class="h-12 w-auto" loading="lazy">
+        </div>
+
+        <p class="text-center text-white/20 text-xs">
+            © 2024–2026 RESPIRATION Project &nbsp;·&nbsp; Łukasiewicz – PIAP &nbsp;·&nbsp; Warsaw, Poland
+        </p>
+
+    </div>
+</footer>
+
+
+<!-- ============================================================ -->
+<!-- SCRIPTS                                                      -->
+<!-- ============================================================ -->
+<script>
+
+/* ===== CONTACT CARD – clip-path reveal on hover (5.txt style) ===== */
+(function () {
+    var COLLAPSED = 'circle(50px at 64px 64px)';
+    var EXPANDED  = 'circle(200% at 64px 64px)';
+    document.querySelectorAll('.contact-card').forEach(function (card) {
+        var overlay = card.querySelector('.contact-overlay');
+        if (!overlay) return;
+        card.addEventListener('mouseenter', function () {
+            overlay.style.clipPath = EXPANDED;
+        });
+        card.addEventListener('mouseleave', function () {
+            overlay.style.clipPath = COLLAPSED;
+        });
+    });
+}());
+
+/* ===== COPY EMAIL ===== */
+function copyEmail(email, btnId) {
+    navigator.clipboard.writeText(email).then(function () {
+        var copyIcon  = document.getElementById('copy-icon-'  + btnId.replace('copy-btn-',''));
+        var checkIcon = document.getElementById('check-icon-' + btnId.replace('copy-btn-',''));
+        if (copyIcon)  copyIcon.classList.add('hidden');
+        if (checkIcon) checkIcon.classList.remove('hidden');
+        setTimeout(function () {
+            if (copyIcon)  copyIcon.classList.remove('hidden');
+            if (checkIcon) checkIcon.classList.add('hidden');
+        }, 2000);
+    });
+}
+
+/* ===== BEAMS BACKGROUND (ported from 3.txt BeamsBackground component) ===== */
+(function () {
+    var canvas = document.getElementById('beams-canvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var beams = [];
+    var animFrame = null;
+    var BEAM_COUNT = 14;          /* fewer beams = better perf */
+    var W = window.innerWidth;
+    var H = window.innerHeight;
+
+    function createBeam() {
+        var angle = -35 + Math.random() * 10;
+        return {
+            x:          Math.random() * W * 1.5 - W * 0.25,
+            y:          Math.random() * H * 1.5 - H * 0.25,
+            width:      30 + Math.random() * 60,
+            length:     H * 2.5,
+            angle:      angle,
+            speed:      0.6 + Math.random() * 1.2,
+            opacity:    0.12 + Math.random() * 0.16,
+            hue:        190 + Math.random() * 70,
+            pulse:      Math.random() * Math.PI * 2,
+            pulseSpeed: 0.02 + Math.random() * 0.03
+        };
+    }
+
+    function resetBeam(beam, index) {
+        var col     = index % 3;
+        var spacing = W / 3;
+        beam.y       = H + 100;
+        beam.x       = col * spacing + spacing / 2 + (Math.random() - 0.5) * spacing * 0.5;
+        beam.width   = 100 + Math.random() * 100;
+        beam.speed   = 0.5 + Math.random() * 0.4;
+        beam.hue     = 190 + (index * 70) / BEAM_COUNT;
+        beam.opacity = 0.2 + Math.random() * 0.1;
+    }
+
+    function drawBeam(beam) {
+        ctx.save();
+        ctx.translate(beam.x, beam.y);
+        ctx.rotate(beam.angle * Math.PI / 180);
+
+        var po = beam.opacity * (0.8 + Math.sin(beam.pulse) * 0.2);
+        var g  = ctx.createLinearGradient(0, 0, 0, beam.length);
+        var h  = beam.hue;
+        g.addColorStop(0,   'hsla(' + h + ',85%,65%,0)');
+        g.addColorStop(0.1, 'hsla(' + h + ',85%,65%,' + (po * 0.5) + ')');
+        g.addColorStop(0.4, 'hsla(' + h + ',85%,65%,' + po + ')');
+        g.addColorStop(0.6, 'hsla(' + h + ',85%,65%,' + po + ')');
+        g.addColorStop(0.9, 'hsla(' + h + ',85%,65%,' + (po * 0.5) + ')');
+        g.addColorStop(1,   'hsla(' + h + ',85%,65%,0)');
+
+        ctx.fillStyle = g;
+        ctx.fillRect(-beam.width / 2, 0, beam.width, beam.length);
+        ctx.restore();
+    }
+
+    function resize() {
+        var dpr = window.devicePixelRatio || 1;
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width  = W * dpr;
+        canvas.height = H * dpr;
+        canvas.style.width  = W + 'px';
+        canvas.style.height = H + 'px';
+        ctx.scale(dpr, dpr);
+        beams = Array.from({ length: BEAM_COUNT }, createBeam);
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, W, H);
+        beams.forEach(function (beam, i) {
+            beam.y     -= beam.speed;
+            beam.pulse += beam.pulseSpeed;
+            if (beam.y + beam.length < -100) resetBeam(beam, i);
+            drawBeam(beam);
+        });
+        animFrame = requestAnimationFrame(animate);
+    }
+
+    function startAnim() { if (!animFrame) animate(); }
+    function stopAnim()  { if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; } }
+
+    resize();
+    window.addEventListener('resize', resize);
+
+    /* Pause when home section is off-screen to save CPU/GPU */
+    var homeSection = document.getElementById('home');
+    var visObserver = new IntersectionObserver(function (entries) {
+        entries[0].isIntersecting ? startAnim() : stopAnim();
+    }, { threshold: 0 });
+    visObserver.observe(homeSection);
+}());
+
+
+/* ===== HEADER: transparent over dark hero, white elsewhere ===== */
+(function () {
+    var header   = document.getElementById('site-header');
+    var navTitle = document.getElementById('nav-title');
+    var navLinks = document.getElementById('nav-links');
+    var navDivider = document.getElementById('nav-divider');
+    var mobileMenu = document.getElementById('mobile-menu');
+    var heroH    = document.getElementById('home').offsetHeight;
+
+    function updateHeader() {
+        var scrolled = window.scrollY > heroH * 0.85;
+        if (scrolled) {
+            header.classList.add('bg-white/95', 'shadow-sm', 'border-b', 'border-gray-100');
+            header.classList.remove('bg-transparent');
+            navTitle.classList.replace('text-white', 'text-gray-900');
+            navDivider.classList.replace('bg-white/30', 'bg-gray-200');
+            navLinks.classList.replace('text-white/80', 'text-gray-600');
+            navLinks.querySelectorAll('a').forEach(function (a) {
+                a.classList.replace('hover:text-white', 'hover:text-blue-600');
+            });
+            document.getElementById('mobile-menu-btn').classList.replace('text-white', 'text-gray-600');
+            document.getElementById('mobile-menu-btn').classList.replace('hover:bg-white/10', 'hover:bg-gray-100');
+            mobileMenu.classList.replace('border-white/20', 'border-gray-100');
+            mobileMenu.querySelectorAll('a').forEach(function (a) {
+                a.classList.replace('text-white/80', 'text-gray-600');
+                a.classList.replace('hover:bg-white/10', 'hover:bg-blue-50');
+                a.classList.replace('hover:text-white', 'hover:text-blue-600');
+            });
+        } else {
+            header.classList.remove('bg-white/95', 'shadow-sm', 'border-b', 'border-gray-100');
+            header.classList.add('bg-transparent');
+        }
+    }
+
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    updateHeader();
+
+    /* Force opaque header when clicking nav links (so corner artifacts are hidden) */
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        a.addEventListener('click', function () {
+            if (this.getAttribute('href') !== '#home') {
+                header.classList.add('bg-white/95', 'shadow-sm', 'border-b', 'border-gray-100');
+                header.classList.remove('bg-transparent');
+                navTitle.classList.replace('text-white', 'text-gray-900');
+                navDivider.classList.replace('bg-white/30', 'bg-gray-200');
+                navLinks.classList.replace('text-white/80', 'text-gray-600');
+                navLinks.querySelectorAll('a').forEach(function (a) {
+                    a.classList.replace('hover:text-white', 'hover:text-blue-600');
+                });
+                document.getElementById('mobile-menu-btn').classList.replace('text-white', 'text-gray-600');
+                document.getElementById('mobile-menu-btn').classList.replace('hover:bg-white/10', 'hover:bg-gray-100');
+                mobileMenu.classList.replace('border-white/20', 'border-gray-100');
+                mobileMenu.querySelectorAll('a').forEach(function (a) {
+                    a.classList.replace('text-white/80', 'text-gray-600');
+                    a.classList.replace('hover:bg-white/10', 'hover:bg-blue-50');
+                    a.classList.replace('hover:text-white', 'hover:text-blue-600');
+                });
+            }
+        });
+    });
+}());
+
+
+/* ===== MOBILE MENU ===== */
+(function () {
+    var btn      = document.getElementById('mobile-menu-btn');
+    var menu     = document.getElementById('mobile-menu');
+    var iconMenu  = document.getElementById('icon-menu');
+    var iconClose = document.getElementById('icon-close');
+
+    btn.addEventListener('click', function () {
+        var isOpen = menu.classList.toggle('hidden');
+        iconMenu.classList.toggle('hidden',  !isOpen);
+        iconClose.classList.toggle('hidden',  isOpen);
+        btn.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    menu.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+            menu.classList.add('hidden');
+            iconMenu.classList.remove('hidden');
+            iconClose.classList.add('hidden');
+            btn.setAttribute('aria-expanded', 'false');
+        });
+    });
+}());
+
+
+/* ===== ACTIVE NAV ON SCROLL ===== */
+(function () {
+    var sections = document.querySelectorAll('section[id]');
+    var navLinks = document.querySelectorAll('.nav-link');
+
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                navLinks.forEach(function (link) {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + entry.target.id) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    }, { threshold: 0.35, rootMargin: '-5% 0px -55% 0px' });
+
+    sections.forEach(function (s) { observer.observe(s); });
+}());
+
+
+/* ===== MODALS ===== */
+function openModal(id) {
+    var el = document.getElementById(id);
+    el.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    /* double rAF to ensure the browser registers the display change before transition */
+    requestAnimationFrame(function () {
+        requestAnimationFrame(function () { el.classList.add('open'); });
+    });
+}
+
+function closeModal(id) {
+    var el = document.getElementById(id);
+    el.classList.remove('open');
+    setTimeout(function () {
+        el.style.display = 'none';
+        document.body.style.overflow = '';
+    }, 230);
+}
+
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function (m) {
+            closeModal(m.id);
+        });
+    }
+});
+
+
+/* ===== SCROLL REVEAL – APP CARDS ===== */
+(function () {
+    var cardObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            /* add 'revealed' when card enters viewport, remove when it leaves */
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+            } else {
+                entry.target.classList.remove('revealed');
+            }
+        });
+    }, { threshold: 0.18 });
+
+    document.querySelectorAll('.app-card').forEach(function (card) {
+        cardObserver.observe(card);
+    });
+}());
+
+
+/* ===== STACKED PUBLICATION CARDS ===== */
+(function () {
+    var CARD_H   = 112;  /* px – matches pub-item height */
+    var CARD_GAP = 16;   /* px gap between expanded cards */
+    var TOP      = 24;   /* px – initial top offset */
+
+    /* Collapsed peek offsets per index */
+    var COLLAPSED = [0, 12, 24, 36];
+
+    document.querySelectorAll('.pub-stack').forEach(function (stack) {
+        var items      = stack.querySelectorAll('.pub-item');
+        var showLessEl = stack.querySelector('.pub-show-less');
+        var count      = items.length;
+        var expanded   = false;
+
+        /* Collapsed → compact stack, links disabled */
+        function setCollapsed() {
+            items.forEach(function (item, i) {
+                item.style.top = (TOP + (COLLAPSED[i] || i * 12)) + 'px';
+            });
+            stack.style.minHeight = (TOP + CARD_H + 56) + 'px';
+            stack.querySelectorAll('.pub-link').forEach(function (a) {
+                a.style.pointerEvents = 'none';
+            });
+            if (showLessEl) {
+                showLessEl.style.opacity       = '0';
+                showLessEl.style.pointerEvents = 'none';
+                showLessEl.style.top           = '';
+            }
+            expanded = false;
+        }
+
+        /* Expanded → all cards visible, links enabled */
+        function setExpanded() {
+            items.forEach(function (item, i) {
+                item.style.top = (TOP + i * (CARD_H + CARD_GAP)) + 'px';
+            });
+            var totalH = TOP + count * (CARD_H + CARD_GAP) + 48;
+            stack.style.minHeight = totalH + 'px';
+            stack.querySelectorAll('.pub-link').forEach(function (a) {
+                a.style.pointerEvents = 'auto';
+            });
+            if (showLessEl) {
+                showLessEl.style.top           = (totalH - 8) + 'px';
+                showLessEl.style.opacity       = '1';
+                showLessEl.style.pointerEvents = 'auto';
+            }
+            expanded = true;
+        }
+
+        /* Init */
+        setCollapsed();
+
+        stack.addEventListener('click', function () {
+            if (!expanded) setExpanded();
+        });
+
+        if (showLessEl) {
+            showLessEl.querySelector('button').addEventListener('click', function (e) {
+                e.stopPropagation();
+                setCollapsed();
+            });
+        }
+    });
+}());
+
+</script>
+
+</body>
+</html>

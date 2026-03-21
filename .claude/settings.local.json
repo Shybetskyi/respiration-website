@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xxd \"c:\\\\Users\\\\Vladyslav\\\\Documents\\\\2024_PIAP\\\\respiration-website\\\\3.txt\")"
+    ]
+  }
+}
