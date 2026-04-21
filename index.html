@@ -1108,6 +1108,20 @@ function copyEmail(email, btnId) {
         } else {
             header.classList.remove('bg-white/95', 'shadow-sm', 'border-b', 'border-gray-100');
             header.classList.add('bg-transparent');
+            navTitle.classList.replace('text-gray-900', 'text-white');
+            navDivider.classList.replace('bg-gray-200', 'bg-white/30');
+            navLinks.classList.replace('text-gray-600', 'text-white/80');
+            navLinks.querySelectorAll('a').forEach(function (a) {
+                a.classList.replace('hover:text-blue-600', 'hover:text-white');
+            });
+            document.getElementById('mobile-menu-btn').classList.replace('text-gray-600', 'text-white');
+            document.getElementById('mobile-menu-btn').classList.replace('hover:bg-gray-100', 'hover:bg-white/10');
+            mobileMenu.classList.replace('border-gray-100', 'border-white/20');
+            mobileMenu.querySelectorAll('a').forEach(function (a) {
+                a.classList.replace('text-gray-600', 'text-white/80');
+                a.classList.replace('hover:bg-blue-50', 'hover:bg-white/10');
+                a.classList.replace('hover:text-blue-600', 'hover:text-white');
+            });
         }
     }
 
